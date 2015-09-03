@@ -26,20 +26,20 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.JsonAdapter;
-public class RiTHMClient{
+public class RitHMClient{
 	
-	final static Logger logger = Logger.getLogger(RiTHMClient.class);
+	final static Logger logger = Logger.getLogger(RitHMClient.class);
 	protected SSLSocket srvSock;
 	protected String serverIPAddr;
 	protected int portNo;
 	protected String trustStorePath;
 	protected String trustStorePass;
 	protected boolean isSecure;
-	protected RiTHMParameters commandParams;
+	protected RitHMParameters commandParams;
 	protected DataInputStream is;
 	protected DataOutputStream os;
 	protected Gson gson = new Gson();
-	public RiTHMClient(String propFile)
+	public RitHMClient(String propFile)
 	{
 		super();
 		InputStream is = null;
@@ -51,7 +51,7 @@ public class RiTHMClient{
 			serverIPAddr = prop.getProperty("server");
 			portNo = Integer.parseInt(prop.getProperty("port"));
 			isSecure=Boolean.getBoolean(prop.getProperty("secure"));
-			commandParams = new RiTHMParameterValidator().validate(propFile);
+			commandParams = new RitHMParameterValidator().validate(propFile);
 			if(isSecure){
 				trustStorePath = prop.getProperty("trust_store");
 				trustStorePass = prop.getProperty("trust_store_password");
@@ -75,24 +75,24 @@ public class RiTHMClient{
 	}
 	public boolean readPropertyFile(String propFile)
 	{
-		commandParams = new RiTHMParameterValidator().validate(propFile);
+		commandParams = new RitHMParameterValidator().validate(propFile);
 		if(commandParams == null)
 			return false;
 		else
 			return true;
 	}
-	public RiTHMCommand createConfigCommand()
+	public RitHMCommand createConfigCommand()
 	{
-		RiTHMCommand rScommand = new RiTHMSetupCommand();
+		RitHMCommand rScommand = new RitHMSetupCommand();
 		rScommand.setCommandString("config");
 		if(commandParams == null)
 			return null;
 		rScommand.setRiTHMParameters(commandParams);
 		return rScommand;
 	}
-	public RiTHMCommand createDisconnectCommand()
+	public RitHMCommand createDisconnectCommand()
 	{
-		RiTHMCommand rScommand = new RiTHMSetupCommand();
+		RitHMCommand rScommand = new RitHMSetupCommand();
 		rScommand.setCommandString("disconnect");
 		return rScommand;
 	}
@@ -101,7 +101,7 @@ public class RiTHMClient{
 		System.setProperty("javax.net.ssl.trustStore", trustStorePath); 
 		System.setProperty("javax.net.ssl.trustStorePassword", trustStorePass);
 	}
-	public RiTHMClient(String ipAddr, int portNo,String trustStorePath, String trustStorePass)
+	public RitHMClient(String ipAddr, int portNo,String trustStorePath, String trustStorePass)
 	{
 		super();
 		this.serverIPAddr = ipAddr;
@@ -111,7 +111,7 @@ public class RiTHMClient{
 		this.trustStorePath = trustStorePath;
 		setSSLParams();
 	}
-	public RiTHMClient(String ipAddr, int portNo)
+	public RitHMClient(String ipAddr, int portNo)
 	{
 		super();
 		this.serverIPAddr = ipAddr;
@@ -138,7 +138,7 @@ public class RiTHMClient{
 		os.writeChar(code);
 		os.writeShort(msg.length);
 		os.write(msg);
-		logger.info(msg);
+		logger.info(new String(msg));
 	}
 	public final void sendProgStateJSON(String progStateStr) throws IOException
 	{
@@ -150,7 +150,7 @@ public class RiTHMClient{
 	}
 	public boolean sendConfiJSON() throws IOException
 	{
-		RiTHMCommand rCommand = createConfigCommand();
+		RitHMCommand rCommand = createConfigCommand();
 		if(rCommand != null)
     	{
     		sendCommand('C', gson.toJson(rCommand).getBytes());
@@ -159,9 +159,9 @@ public class RiTHMClient{
     	}
 		return false;
 	}
-	public RiTHMReplyCommand processReply() throws JsonSyntaxException, IOException
+	public RitHMReplyCommand processReply() throws JsonSyntaxException, IOException
 	{
-    	RiTHMReplyCommand reply = gson.fromJson(readReply(),RiTHMReplyCommand.class);
+    	RitHMReplyCommand reply = gson.fromJson(readReply(),RitHMReplyCommand.class);
     	logger.info(reply.getCommandString());
     	return reply;
 	}
@@ -186,7 +186,5 @@ public class RiTHMClient{
 		}
 	  
 	}
-
-
 
 }
